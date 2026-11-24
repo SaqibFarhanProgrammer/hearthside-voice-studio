@@ -28,3 +28,11 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Local Voice Studio rules
+
+- All speech is synthesized in the browser (Web Workers + ONNX Runtime WASM), never on the server or a cloud TTS API — the app's promise is on-device, offline-capable TTS with no keys.
+- Voices live only in `src/lib/tts/voice-registry.ts` and must be real upstream IDs; the male-only and licence flags are enforced by `src/lib/tts/tts-rules.test.ts`.
+- Engines implement `TtsProvider` (`src/lib/tts/providers/`); `tts.service.ts` keeps one engine worker alive at a time and runs one job at a time to limit RAM.
+- Model and runtime binaries are cached via Cache Storage (`model-cache.ts`) and passed to ONNX Runtime as `wasmBinary` with CDN `wasmPaths` cleared, so generation works with the network blocked after first use.
+- `src/lib/tts/vendor/piper-phonemize.js` is vendored MIT Emscripten glue (piper-phonemize + espeak-ng); do not edit it by hand.

@@ -15,4 +15,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  vite: {
+    // Voice engines run in module workers that lazy-load code, which needs ES worker output.
+    worker: { format: "es" },
+  },
 });
